@@ -45,7 +45,13 @@ export function mount(spec, parts) {
   addButton.textContent = "补上最小缺口";
   addButton.addEventListener("click", function () {
     const view = render(spec);
-    if (view.missing.length > 0) spec.serials = (spec.serials || []).concat([view.missing[0]]);
+    if (view.missing.length > 0) {
+      const value = view.missing[0];
+      const next = (spec.serials || []).slice();
+      const spot = next.findIndex((existing) => existing > value);
+      next.splice(spot === -1 ? next.length : spot, 0, value);
+      spec.serials = next;
+    }
     draw();
   });
   parts.controls.appendChild(addButton);
